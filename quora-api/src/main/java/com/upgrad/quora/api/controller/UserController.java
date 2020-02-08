@@ -78,7 +78,7 @@ public class UserController {
         UserEntity user = userAuthEntity.getUser();
 
         SigninResponse signinResponse = new SigninResponse();
-        signinResponse.setId(user.getId().toString());
+        signinResponse.setId(user.getUuid());
         signinResponse.setMessage("SIGNED IN SUCCESSFULLY");
 
 
