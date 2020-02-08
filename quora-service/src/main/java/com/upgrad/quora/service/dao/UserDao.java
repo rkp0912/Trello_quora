@@ -54,6 +54,21 @@ public class UserDao {
     }
 
     /**
+     * Gets the user from the user table using uuid
+     * @param uuid
+     * @return
+     */
+    public UserEntity getUserByUuid(final String uuid){
+        try {
+            return entityManager.createNamedQuery("userByUuid", UserEntity.class).setParameter("uuid", uuid)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+
+    /**
      * Creates a new entry in the user_auth table
      * @param userAuthEntity
      * @return
