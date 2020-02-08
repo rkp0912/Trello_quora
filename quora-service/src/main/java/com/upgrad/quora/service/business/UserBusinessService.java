@@ -127,31 +127,4 @@ public class UserBusinessService {
         }
         throw new SignOutRestrictedException("SGR-001","User is not Signed in");
     }
-
-
-    /**
-     * Check the access_token exists and it is valid. If gets the user based on the UUID and return the user.
-     * @param userId
-     * @param authorizationToken
-     * @return Returns the UserEntity
-     * @throws AuthorizationFailedException
-     * @throws UserNotFoundException
-     */
-    public UserEntity getUserByUserId(final String userId, final String authorizationToken) throws AuthorizationFailedException, UserNotFoundException{
-        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
-        if(userAuthEntity == null){
-            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
-        } else{
-            if(userAuthEntity.getLogoutAt() != null){
-                throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get user details");
-             } else{
-                UserEntity userEntity = userDao.getUserByUuid(userId);
-                if(userEntity == null)
-                    throw new UserNotFoundException("USR-001","User with entered uuid does not exist");
-                else
-                    return userEntity;
-            }
-        }
-    }
-
 }
