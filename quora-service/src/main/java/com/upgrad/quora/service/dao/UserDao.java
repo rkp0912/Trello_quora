@@ -100,4 +100,13 @@ public class UserDao {
         entityManager.merge(userAuthEntity);
     }
 
+    /**
+     * Delete the userEntity
+     * @param userEntity
+     */
+    public void deleteUser(final UserEntity userEntity){
+        entityManager.remove(userEntity);
+    }
+
+
 }
