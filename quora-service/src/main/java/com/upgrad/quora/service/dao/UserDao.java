@@ -1,5 +1,6 @@
 package com.upgrad.quora.service.dao;
 
+import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
@@ -43,7 +44,7 @@ public class UserDao {
     }
 
     /**
-     * Creates a new entry in the DB
+     * Creates a new entry in the user table
      * @param userEntity
      * @return
      */
@@ -52,5 +53,14 @@ public class UserDao {
         return userEntity;
     }
 
+    /**
+     * Creates a new entry in the user_auth table
+     * @param userAuthEntity
+     * @return
+     */
+    public UserAuthEntity createUserAuth(final UserAuthEntity userAuthEntity){
+        entityManager.persist(userAuthEntity);
+        return userAuthEntity;
+    }
 
 }

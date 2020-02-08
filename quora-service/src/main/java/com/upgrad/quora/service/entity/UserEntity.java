@@ -22,7 +22,7 @@ public class UserEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "uuid")
     @Size(max = 200)
@@ -81,11 +81,11 @@ public class UserEntity implements Serializable {
     public boolean equals(Object obj){ return new EqualsBuilder().append(this, obj).isEquals();}
 
     public Integer getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Integer id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getUuid() {
