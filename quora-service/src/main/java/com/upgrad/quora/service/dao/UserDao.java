@@ -63,4 +63,26 @@ public class UserDao {
         return userAuthEntity;
     }
 
+    /**
+     * Fetches the record from UserAuthEntity using access token
+     * @param accessToken
+     * @return
+     */
+    public UserAuthEntity getUserAuth(final String accessToken){
+        try {
+            return entityManager.createNamedQuery("userAuthByAccessToken", UserAuthEntity.class)
+                    .setParameter("accessToken", accessToken).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    /**
+     * Updates an existing UserAuthEntity record.
+     * @param userAuthEntity
+     */
+    public void updateUserAuth(final UserAuthEntity userAuthEntity){
+        entityManager.merge(userAuthEntity);
+    }
+
 }
