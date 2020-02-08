@@ -4,6 +4,7 @@ import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
+import com.upgrad.quora.service.exception.SignOutRestrictedException;
 import com.upgrad.quora.service.exception.SignUpRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -109,5 +110,23 @@ public class UserBusinessService {
 
     }
 
-
+    /**
+     * Method check if the user is logged-in using token.
+     * Logout the user by updating the logout_At time in DB
+     * @param authorizationToken
+     * @return UserEntity object of the logged-out user.
+     * @throws SignOutRestrictedException
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public UserEntity logoutUser(final String authorizationToken) throws SignOutRestrictedException{
+        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+        if(userAuthEntity != null){
+            //update the logout time and update the same in the DB
+            final ZonedDateTime now = ZonedDateTime.now();
+            userAuthEntity.setLogoutAt(now);
+            userDao.updateUserAuth(userAuthEntity);
+            return userAuthEntity.getUser();
+        }
+        throw new SignOutRestrictedException("SGR-001","User is not Signed in");
+    }
 }
