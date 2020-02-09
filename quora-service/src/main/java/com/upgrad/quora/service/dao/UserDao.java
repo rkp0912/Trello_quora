@@ -67,6 +67,19 @@ public class UserDao {
         }
     }
 
+    /**
+     * Gets the user from user table based on PrimaryKey which is id.
+     * @param id
+     * @return user entity object
+     */
+    public UserEntity getUserByPk(final Integer id){
+        try {
+            return entityManager.createNamedQuery("userByPk", UserEntity.class).setParameter("id", id)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+           return null;
+        }
+    }
 
     /**
      * Creates a new entry in the user_auth table
