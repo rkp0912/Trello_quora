@@ -2,6 +2,7 @@ package com.upgrad.quora.service.business;
 
 import com.upgrad.quora.service.dao.AnswerDao;
 import com.upgrad.quora.service.dao.QuestionDao;
+import com.upgrad.quora.service.dao.UserAuthDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.AnswerEntity;
 import com.upgrad.quora.service.entity.QuestionEntity;
@@ -22,6 +23,9 @@ public class AnswerBusinessService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private UserAuthDao userAuthDao;
 
     @Autowired
     private QuestionDao questionDao;
@@ -49,7 +53,7 @@ public class AnswerBusinessService {
             throw new InvalidQuestionException("QUES-001","The question entered is invalid");
         } else {
             //Is authorization token valid
-            UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+            UserAuthEntity userAuthEntity = userAuthDao.getUserAuth(authorizationToken);
             if(userAuthEntity == null){
                 throw new AuthorizationFailedException("ATHR-001","User has not signed in");
             } else {
@@ -81,7 +85,7 @@ public class AnswerBusinessService {
             final String answerId, AnswerEntity answerEntity, final String authorizationToken)
         throws AuthorizationFailedException, AnswerNotFoundException{
         //Check if the authorization token is valid
-        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+        UserAuthEntity userAuthEntity = userAuthDao.getUserAuth(authorizationToken);
         if(userAuthEntity == null){
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");
         } else {
@@ -121,7 +125,7 @@ public class AnswerBusinessService {
         throws AuthorizationFailedException, AnswerNotFoundException{
 
         //Check if the authorization token is valid
-        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+        UserAuthEntity userAuthEntity = userAuthDao.getUserAuth(authorizationToken);
         if(userAuthEntity == null){
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");
         } else {
@@ -170,7 +174,7 @@ public class AnswerBusinessService {
         throws AuthorizationFailedException, InvalidQuestionException{
 
         //Check if the authorization token is valid
-        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+        UserAuthEntity userAuthEntity = userAuthDao.getUserAuth(authorizationToken);
         if(userAuthEntity == null){
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");
         } else {
