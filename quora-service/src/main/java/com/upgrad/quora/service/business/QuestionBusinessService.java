@@ -109,4 +109,42 @@ public class QuestionBusinessService {
         }
     }
 
+    /**
+     * Method deletes the question from the DB, if the authorization token belongs to the question owner or role as admin
+     * and question exists in the DB
+     * @param questionUuid
+     * @param authorizationToken
+     * @return
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public QuestionEntity deleteQuestion (
+            final String questionUuid, final String authorizationToken)
+            throws AuthorizationFailedException, InvalidQuestionException{
+
+        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+        if(userAuthEntity == null){
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
+        } else{
+            if(userAuthEntity.getLogoutAt() != null){
+                throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to delete a question");
+            } else{
+                QuestionEntity questionEntity = questionDao.getQuestionByUuid(questionUuid);
+                if(questionEntity == null){
+                    throw new InvalidQuestionException("QUES-001","Entered question uuid does not exist");
+                }
+                //if the authorized user is the question owner or his role is administrator, then delete the question
+                if(questionEntity.getUser().getId() == userAuthEntity.getUser().getId() ||
+                        userAuthEntity.getUser().getRole().equals("admin")){
+                    questionDao.deleteQuestion(questionEntity);
+                    return questionEntity;
+                } else {
+                    throw new AuthorizationFailedException("ATHR-003","Only the question owner can edit the question");
+                }
+            }
+        }
+    }
+
+
 }

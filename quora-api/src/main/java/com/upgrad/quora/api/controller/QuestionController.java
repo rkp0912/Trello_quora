@@ -71,14 +71,23 @@ public class QuestionController {
         return new ResponseEntity<List<QuestionDetailsResponse>>(questionDetailsResponseArrayList, HttpStatus.OK);
     }
 
-
+    /**
+     * Method accepts the authorization token, content and questionid
+     * Updates the content of the question, if the authorization token is valid and question id exists.
+     * @param questionEditRequest
+     * @param uuid
+     * @param authorization
+     * @return
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
     @RequestMapping(method = RequestMethod.PUT, path="/question/edit/{questionId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
     produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionEditResponse> editQuestionContent(
             final QuestionEditRequest questionEditRequest,
             @PathVariable("questionId") String uuid,
             @RequestHeader("authorization") final String authorization)
-            throws AuthorizationFailedException, InvalidQuestionException{
+        throws AuthorizationFailedException, InvalidQuestionException{
 
         final QuestionEntity questionEntity = new QuestionEntity();
         questionEntity.setUuid(uuid);
@@ -87,6 +96,29 @@ public class QuestionController {
         QuestionEditResponse questionEditResponse = new QuestionEditResponse().id(updatedQuestion.getUuid())
                 .status("QUESTION EDITED");
         return new ResponseEntity<QuestionEditResponse>(questionEditResponse, HttpStatus.OK);
+    }
+
+
+    /**
+     * Method accepts authroization token and the question uuid
+     * Deletes the question from the DB, if authorization token is valid and question exists in the DB
+     * @param uuid
+     * @param authorization
+     * @return
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
+    @RequestMapping(method=RequestMethod.DELETE, path= "/question/delete/{questionId}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<QuestionDeleteResponse> deleteQuestion(
+            @PathVariable("questionId") String uuid,
+            @RequestHeader("authorization") final String authorization)
+        throws AuthorizationFailedException, InvalidQuestionException{
+
+        final QuestionEntity deletedQuestion = questionBusinessService.deleteQuestion(uuid, authorization);
+        QuestionDeleteResponse questionDeleteResponse = new QuestionDeleteResponse().id(deletedQuestion.getUuid())
+                .status("QUESTION DELETED");
+        return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
     }
 
 }
