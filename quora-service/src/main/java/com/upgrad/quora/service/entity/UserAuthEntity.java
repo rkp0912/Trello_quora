@@ -23,6 +23,7 @@ public class UserAuthEntity implements Serializable {
     private Integer id;
 
     @Column(name="uuid")
+    @Size(max = 200)
     private String uuid;
 
     @ManyToOne
