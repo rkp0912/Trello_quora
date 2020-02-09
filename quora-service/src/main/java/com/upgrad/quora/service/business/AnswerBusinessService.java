@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Service
 public class AnswerBusinessService {
@@ -144,6 +145,48 @@ public class AnswerBusinessService {
             }
         }
 
+    }
+
+
+    /**
+     * Gets the question using questionUuid
+     * @param questionUuid
+     * @return QuestionEntity
+     */
+    public QuestionEntity getQuestionByUuid(final String questionUuid){
+       return questionDao.getQuestionByUuid(questionUuid);
+    }
+
+
+    /**
+     * Method returns the list of answers for a question if authorization token is valid.
+     * @param questionUuid
+     * @param authorizationToken
+     * @return List of AnswerEntity
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
+    public List<AnswerEntity> getAllAnswersToQuestion(final String questionUuid, final String authorizationToken)
+        throws AuthorizationFailedException, InvalidQuestionException{
+
+        //Check if the authorization token is valid
+        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+        if(userAuthEntity == null){
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
+        } else {
+            if(userAuthEntity.getLogoutAt() != null){
+                throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get the answers");
+            } else {
+                //Get question by UUID
+                QuestionEntity questionEntity = getQuestionByUuid(questionUuid);
+                if(questionEntity == null){
+                    throw new InvalidQuestionException("QUES-001","The question with entered uuid whose details " +
+                            "are to be seen does not exist");
+                } else {
+                    return answerDao.getAllAnswersToQuestion(questionEntity);
+                }
+            }
+        }
     }
 
 }
