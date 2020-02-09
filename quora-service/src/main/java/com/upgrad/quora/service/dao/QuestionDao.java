@@ -36,4 +36,27 @@ public class QuestionDao {
         }
     }
 
+    /**
+     * Fetches the Question Entity record from the DB for a uuid
+     * @param uuid
+     * @return
+     */
+    public QuestionEntity getQuestionByUuid(final String uuid){
+        try {
+            return entityManager.createNamedQuery("getQuestionByUuid", QuestionEntity.class).setParameter("uuid", uuid)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+
+    /**
+     * Method updates the existing QuestionEntity record in the DB
+     * @param updatedQuestion
+     */
+    public void updateQuestion(final QuestionEntity updatedQuestion){
+        entityManager.merge(updatedQuestion);
+    }
+
 }
