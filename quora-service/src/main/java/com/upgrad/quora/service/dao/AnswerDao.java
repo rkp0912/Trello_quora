@@ -45,4 +45,12 @@ public class AnswerDao {
         entityManager.merge(updatedAnswerEntity);
     }
 
+    /**
+     * Method removes the answer entity record from the DB
+     * @param deleteAnswer
+     */
+    public void deleteAnswer(final AnswerEntity deleteAnswer){
+        entityManager.remove(deleteAnswer);
+    }
+
 }

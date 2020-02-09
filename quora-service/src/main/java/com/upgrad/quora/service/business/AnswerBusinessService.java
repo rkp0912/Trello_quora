@@ -106,5 +106,44 @@ public class AnswerBusinessService {
         }
     }
 
+    /**
+     * Method validates if the answer uuid is valid and authorization token belongs answer owner or user having admin
+     * role and delete the answer from the DB
+     * @param answerId
+     * @param authorizationToken
+     * @return AnswerEntity
+     * @throws AuthorizationFailedException
+     * @throws AnswerNotFoundException
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public AnswerEntity deleteAnswer(final String answerId, final String authorizationToken)
+        throws AuthorizationFailedException, AnswerNotFoundException{
+
+        //Check if the authorization token is valid
+        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+        if(userAuthEntity == null){
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
+        } else {
+            if(userAuthEntity.getLogoutAt() != null){
+                throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to delete an answer");
+            } else {
+                //Get answer by UUID
+                AnswerEntity answerTobeDeleted = answerDao.getAnswerByUuid(answerId);
+                if(answerTobeDeleted == null){
+                    throw new AnswerNotFoundException("ANS-001","Entered answer uuid does not exist");
+                } else {
+                    //Only answer owner or user with admin role can delete the answer.
+                    if(answerTobeDeleted.getUser().getId() == userAuthEntity.getUser().getId() ||
+                        userAuthEntity.getUser().getRole().equals("admin")){
+                        answerDao.deleteAnswer(answerTobeDeleted);
+                        return answerTobeDeleted;
+                    } else{
+                        throw new AuthorizationFailedException("ATHR-003","Only the answer owner or admin can delete the answer");
+                    }
+                }
+            }
+        }
+
+    }
 
 }
