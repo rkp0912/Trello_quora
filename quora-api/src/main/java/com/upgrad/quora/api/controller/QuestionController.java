@@ -5,6 +5,7 @@ import com.upgrad.quora.service.business.QuestionBusinessService;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -120,5 +121,32 @@ public class QuestionController {
                 .status("QUESTION DELETED");
         return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
     }
+
+    /**
+     * Method accepts the user id and authorization token and retuns all the questions of the user, if user and
+     * authorization token are valid
+     * @param userId
+     * @param authorization
+     * @return List of QuestionDetailResponse
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
+     */
+    @RequestMapping(method = RequestMethod.GET, path="question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<QuestionDetailsResponse>>getAllQuestionsByUser(
+            @PathVariable("userId") final String userId, @RequestHeader("authorization") final String authorization)
+        throws AuthorizationFailedException, UserNotFoundException{
+        List<QuestionEntity> allUserQuestions = questionBusinessService.getAllQuestionsByUser(userId, authorization);
+
+        List<QuestionDetailsResponse> questionDetailsResponseArrayList = new ArrayList<>();
+        if(allUserQuestions != null){
+            for (QuestionEntity questionEntity :allUserQuestions ) {
+                QuestionDetailsResponse questionDetailsResponse = new QuestionDetailsResponse().id(questionEntity.getUuid())
+                        .content(questionEntity.getContent());
+                questionDetailsResponseArrayList.add(questionDetailsResponse);
+            }
+        }
+        return new ResponseEntity<List<QuestionDetailsResponse>>(questionDetailsResponseArrayList, HttpStatus.OK);
+    }
+
 
 }

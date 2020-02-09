@@ -7,6 +7,7 @@ import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -147,4 +148,32 @@ public class QuestionBusinessService {
     }
 
 
+    /**
+     * Method returns list of all questions of a specific user if user id and  authorization token are valid
+     * @param uuidOfUser
+     * @param authorizationToken
+     * @return List of questionEntity
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
+     */
+    public List<QuestionEntity> getAllQuestionsByUser(final String uuidOfUser, final String authorizationToken)
+        throws AuthorizationFailedException, UserNotFoundException{
+        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+        if(userAuthEntity == null){
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
+        } else{
+            if(userAuthEntity.getLogoutAt() != null){
+                throw new AuthorizationFailedException(
+                        "ATHR-002","User is signed out.Sign in first to get all questions posted by a specific user");
+            } else{
+                    UserEntity userEntity = userDao.getUserByUuid(uuidOfUser);
+                    if(userEntity == null){
+                        throw new UserNotFoundException("USR-001",
+                                "User with entered uuid whose question details are to be seen does not exist");
+                    } else {
+                        return questionDao.getQuestionsByUser(userEntity);
+                    }
+            }
+        }
+    }
 }
