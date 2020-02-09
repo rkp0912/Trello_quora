@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class QuestionBusinessService {
 
@@ -50,6 +52,23 @@ public class QuestionBusinessService {
 
     }
 
-
+    /**
+     * Method returns all questions in the DB, if the authorization token valid.
+     * @param authorizationToken
+     * @return List of Question Entity
+     * @throws AuthorizationFailedException
+     */
+    public List<QuestionEntity> getAllQuestions(final String authorizationToken) throws AuthorizationFailedException{
+        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+        if(userAuthEntity == null){
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
+        } else{
+            if(userAuthEntity.getLogoutAt() != null){
+                throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get all questions");
+            } else{
+                return questionDao.getAllQuestions();
+            }
+        }
+    }
 
 }
