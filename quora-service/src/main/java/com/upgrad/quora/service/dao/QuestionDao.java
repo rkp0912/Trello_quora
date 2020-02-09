@@ -50,13 +50,20 @@ public class QuestionDao {
         }
     }
 
-
     /**
      * Method updates the existing QuestionEntity record in the DB
      * @param updatedQuestion
      */
     public void updateQuestion(final QuestionEntity updatedQuestion){
         entityManager.merge(updatedQuestion);
+    }
+
+    /**
+     * Method deletes the Question Entity record from the DB
+     * @param deleteQuestion
+     */
+    public void deleteQuestion(final QuestionEntity deleteQuestion){
+        entityManager.remove(deleteQuestion);
     }
 
 }
