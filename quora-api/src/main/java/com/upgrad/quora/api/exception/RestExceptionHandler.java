@@ -14,21 +14,21 @@ public class RestExceptionHandler {
     @ExceptionHandler(SignUpRestrictedException.class)
     public ResponseEntity<ErrorResponse> signUpRestrictedException(SignUpRestrictedException exc, WebRequest request){
         return new ResponseEntity<ErrorResponse>(
-                new ErrorResponse().code((exc.getCode())).message(exc.getErrorMessage()), HttpStatus.NOT_FOUND
+                new ErrorResponse().code((exc.getCode())).message(exc.getErrorMessage()), HttpStatus.CONFLICT
         );
     }
 
     @ExceptionHandler(AuthenticationFailedException.class)
     public ResponseEntity<ErrorResponse> authenticationFailedException(AuthenticationFailedException exc, WebRequest request){
         return new ResponseEntity<ErrorResponse>(
-                new ErrorResponse().code((exc.getCode())).message(exc.getErrorMessage()), HttpStatus.FORBIDDEN
+                new ErrorResponse().code((exc.getCode())).message(exc.getErrorMessage()), HttpStatus.CONFLICT
         );
     }
 
     @ExceptionHandler(SignOutRestrictedException.class)
     public  ResponseEntity<ErrorResponse> signOutRestrictedException(SignOutRestrictedException exc, WebRequest request){
         return new ResponseEntity<ErrorResponse>(
-                new ErrorResponse().code((exc.getCode())).message(exc.getErrorMessage()), HttpStatus.NOT_FOUND
+                new ErrorResponse().code((exc.getCode())).message(exc.getErrorMessage()), HttpStatus.UNAUTHORIZED
         );
     }
 
