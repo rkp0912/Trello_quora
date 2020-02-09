@@ -1,11 +1,13 @@
 package com.upgrad.quora.service.dao;
 
 import com.upgrad.quora.service.entity.AnswerEntity;
+import com.upgrad.quora.service.entity.QuestionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.List;
 
 @Repository
 public class AnswerDao {
@@ -51,6 +53,21 @@ public class AnswerDao {
      */
     public void deleteAnswer(final AnswerEntity deleteAnswer){
         entityManager.remove(deleteAnswer);
+    }
+
+    /**
+     * Fetches the list of answers for a given question entity
+     * @param questionEntity
+     * @return List of AnswerEntity
+     */
+    public List<AnswerEntity> getAllAnswersToQuestion(final QuestionEntity questionEntity){
+        try {
+            return entityManager.createNamedQuery("getAllAnswerByQuestionUuid", AnswerEntity.class)
+                    .setParameter("question", questionEntity)
+                    .getResultList();
+        } catch (NoResultException nre) {
+            return null;
+        }
     }
 
 }
