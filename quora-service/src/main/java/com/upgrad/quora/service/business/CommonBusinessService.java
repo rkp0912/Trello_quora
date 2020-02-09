@@ -1,5 +1,6 @@
 package com.upgrad.quora.service.business;
 
+import com.upgrad.quora.service.dao.UserAuthDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
@@ -13,6 +14,9 @@ public class CommonBusinessService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private UserAuthDao userAuthDao;
+
     /**
      * Check the access_token exists and it is valid. If gets the user based on the UUID and return the user.
      * @param userId
@@ -22,7 +26,7 @@ public class CommonBusinessService {
      * @throws UserNotFoundException
      */
     public UserEntity getUserByUserId(final String userId, final String authorizationToken) throws AuthorizationFailedException, UserNotFoundException{
-        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+        UserAuthEntity userAuthEntity = userAuthDao.getUserAuth(authorizationToken);
         if(userAuthEntity == null){
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");
         } else{

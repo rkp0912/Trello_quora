@@ -1,5 +1,6 @@
 package com.upgrad.quora.service.business;
 
+import com.upgrad.quora.service.dao.UserAuthDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
@@ -17,6 +18,9 @@ public class UserBusinessService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private UserAuthDao userAuthDao;
 
     @Autowired
     private PasswordCryptographyProvider passwordCryptographyProvider;
@@ -99,7 +103,7 @@ public class UserBusinessService {
             userAuthEntity.setAccessToken(jwtTokenProvider.generateToken(userEntity.getUuid(),now, expiresAt));
             userAuthEntity.setLoginAt(now);
             userAuthEntity.setExpiresAt(expiresAt);
-            userDao.createUserAuth(userAuthEntity);
+            userAuthDao.createUserAuth(userAuthEntity);
 
             return userAuthEntity;
         } else {
@@ -117,12 +121,12 @@ public class UserBusinessService {
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity logoutUser(final String authorizationToken) throws SignOutRestrictedException{
-        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+        UserAuthEntity userAuthEntity = userAuthDao.getUserAuth(authorizationToken);
         if(userAuthEntity != null){
             //update the logout time and update the same in the DB
             final ZonedDateTime now = ZonedDateTime.now();
             userAuthEntity.setLogoutAt(now);
-            userDao.updateUserAuth(userAuthEntity);
+            userAuthDao.updateUserAuth(userAuthEntity);
             return userAuthEntity.getUser();
         }
         throw new SignOutRestrictedException("SGR-001","User is not Signed in");

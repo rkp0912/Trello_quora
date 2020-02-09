@@ -1,5 +1,6 @@
 package com.upgrad.quora.service.business;
 
+import com.upgrad.quora.service.dao.UserAuthDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
@@ -15,6 +16,9 @@ public class AdminBusinessService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private UserAuthDao userAuthDao;
+
     /**
      * Checks if the autherization token is valid and role of the user is admin.
      * Find the user with the provided userid, if user exists, delete the user from DB
@@ -27,7 +31,7 @@ public class AdminBusinessService {
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity userDelete(final String userId, final String authorizationToken)
             throws AuthorizationFailedException, UserNotFoundException {
-        UserAuthEntity userAuthEntity = userDao.getUserAuth(authorizationToken);
+        UserAuthEntity userAuthEntity = userAuthDao.getUserAuth(authorizationToken);
         if(userAuthEntity == null){
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");
         } else{
