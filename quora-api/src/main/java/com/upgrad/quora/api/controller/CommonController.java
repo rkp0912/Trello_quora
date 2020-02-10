@@ -17,6 +17,14 @@ public class CommonController {
     @Autowired
     private CommonBusinessService commonBusinessService;
 
+    /**
+     *This method accepts the User UUID and authorization token as Http GET method and returns the user details
+     * @param userId
+     * @param authorization
+     * @return UserDetailsResponse JSON and HttpStatus.OK
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
+     */
     @RequestMapping(method = RequestMethod.GET, path="/userprofile/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDetailsResponse>userProfile(@PathVariable("userId") final String userId,
                                                       @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException {

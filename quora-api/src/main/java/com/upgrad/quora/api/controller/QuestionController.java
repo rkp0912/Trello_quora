@@ -51,7 +51,7 @@ public class QuestionController {
 
 
     /**
-     * Method accepts the authorization token and returns the list of all questions
+     * Method accepts the authorization token as Http GET method and returns the list of all questions
      * @param authorization
      * @return list of questiondetailresponse
      * @throws AuthorizationFailedException
@@ -73,7 +73,7 @@ public class QuestionController {
     }
 
     /**
-     * Method accepts the authorization token, content and questionid
+     * Method accepts the authorization token, content and question uuid as Http PUT method
      * Updates the content of the question, if the authorization token is valid and question id exists.
      * @param questionEditRequest
      * @param uuid
@@ -101,7 +101,7 @@ public class QuestionController {
 
 
     /**
-     * Method accepts authroization token and the question uuid
+     * Method accepts authorization token and the question uuid as Http DELETE method
      * Deletes the question from the DB, if authorization token is valid and question exists in the DB
      * @param uuid
      * @param authorization
@@ -123,8 +123,8 @@ public class QuestionController {
     }
 
     /**
-     * Method accepts the user id and authorization token and retuns all the questions of the user, if user and
-     * authorization token are valid
+     * Method accepts the user id and authorization token as Http GET method and returns all the questions of the user,
+     * if user and authorization token are valid
      * @param userId
      * @param authorization
      * @return List of QuestionDetailResponse

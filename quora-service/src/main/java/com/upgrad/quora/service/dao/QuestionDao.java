@@ -67,7 +67,11 @@ public class QuestionDao {
         entityManager.remove(deleteQuestion);
     }
 
-
+    /**
+     * Method returns the list of Question Entity records for a given user uuid
+     * @param user
+     * @return List of QuestionEntity
+     */
     public List<QuestionEntity> getQuestionsByUser(final UserEntity user){
         try {
             return entityManager.createNamedQuery("getQuestionsByUserId", QuestionEntity.class)

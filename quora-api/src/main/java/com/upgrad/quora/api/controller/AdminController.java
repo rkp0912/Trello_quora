@@ -17,7 +17,15 @@ public class AdminController {
     @Autowired
     private AdminBusinessService adminBusinessService;
 
-
+    /**
+     * This method accepts the user uuid and the authorization token as Http DELETE method
+     * and deletes the user if the authorization token  belongs to user having admin role.
+     * @param userId
+     * @param authorization
+     * @return UserDeleteResponse JSON and HttpStatus.Ok
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
+     */
     @RequestMapping(method = RequestMethod.DELETE, path="/admin/user/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDeleteResponse>userDelete(
             @PathVariable("userId") final String userId, @RequestHeader("authorization") final String authorization)

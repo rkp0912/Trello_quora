@@ -29,13 +29,13 @@ public class AnswerController {
     private QuestionBusinessService questionBusinessService;
 
     /**
-     * This method accepts question id, answer request  and authorization token
+     * This method accepts question uuid, answer request  and authorization token as Http POST method.
      * On successful validation of question and authorization token, answer will saved and appropriate UUID and
      * success message will be returned with Httpstatus as ok
      * @param answerRequest
      * @param questionId
      * @param authorization
-     * @return answerresponse json and httpstatus.ok
+     * @return answerresponse json and httpstatus.OK
      * @throws AuthorizationFailedException
      * @throws InvalidQuestionException
      */
@@ -59,12 +59,12 @@ public class AnswerController {
     }
 
     /**
-     * Method accepts the answer UUID, answer content and authorization token. If UUID and authorization token
-     * belongs to answer owner then update the answer
+     * Method accepts the answer UUID, answer content and authorization token as Http PUT method.
+     * If UUID and authorization token belongs to answer owner then update the answer
      * @param answerEditRequest
      * @param answerId
      * @param authorization
-     * @return AnswerEditResponse JSON
+     * @return AnswerEditResponse JSON and HttpStatus.OK
      * @throws AuthorizationFailedException
      * @throws AnswerNotFoundException
      */
@@ -86,10 +86,11 @@ public class AnswerController {
     }
 
     /**
-     * Method accepts the answer uuid and authorization token and delete the answer if validation is successful
+     * Method accepts the answer uuid and authorization token as Http DELETE method and
+     * delete the answer if validation is successful
      * @param answerId
      * @param authorization
-     * @return AnswerDeleteResponse JSON
+     * @return AnswerDeleteResponse JSON and HttpStatus.OK
      * @throws AuthorizationFailedException
      * @throws AnswerNotFoundException
      */
@@ -106,11 +107,11 @@ public class AnswerController {
     }
 
     /**
-     * This method returns the list of answers for the given question Id if question Id and authorization token are
-     * valid
+     * This method returns the list of answers for the given question Id as Http GET method
+     * if question Id and authorization token is valid
      * @param questionId
      * @param authorization
-     * @return List of AnswerDetailsResponse JSON
+     * @return List of AnswerDetailsResponse JSON and HttpStatus.OK
      * @throws AuthorizationFailedException
      * @throws InvalidQuestionException
      */
