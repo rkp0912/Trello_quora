@@ -33,13 +33,14 @@ public class UserController {
 
 
     /**
-     * This rest controller is used for registering a user.
+     * This method is used for registering a user. The information is passed as Http POST method
      * @param signupUserRequest
-     * @return a message "User Successfully Registered" and Http Status as OK
+     * @return SignupUserResponse JSON and HttpStatus.OK
      * @throws SignUpRestrictedException
      */
     @RequestMapping(method = RequestMethod.POST, path="/user/signup", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SignupUserResponse> signup(final SignupUserRequest signupUserRequest) throws SignUpRestrictedException {
+    public ResponseEntity<SignupUserResponse> signup(
+            final SignupUserRequest signupUserRequest) throws SignUpRestrictedException {
 
         final UserEntity userEntity = new UserEntity();
         userEntity.setUuid(UUID.randomUUID().toString());
@@ -55,21 +56,23 @@ public class UserController {
         userEntity.setContactNumber(signupUserRequest.getContactNumber());
 
         final UserEntity createdUserEntity = userBusinessService.signup(userEntity);
-        SignupUserResponse signupUserResponse = new SignupUserResponse().id(createdUserEntity.getUuid()).status("USER SUCCESSFULLY REGISTERED");
+        SignupUserResponse signupUserResponse = new SignupUserResponse().id(createdUserEntity.getUuid())
+                .status("USER SUCCESSFULLY REGISTERED");
 
         return new ResponseEntity<SignupUserResponse>(signupUserResponse, HttpStatus.OK);
     }
 
 
     /**
-     * This method accepts username and password as "Basic [<username:password> encoded as base64 ]"
+     * This method accepts username and password as "Basic [<username:password> encoded as base64 ]" as Http POST method
      * return access-token on successful validation otherwise throws Authenticationfailed exception
      * @param authentication
-     * @return jwttoken
+     * @return SigninResponse and  HttpStatus.OK
      * @throws AuthenticationFailedException
      */
     @RequestMapping(method=RequestMethod.POST, path="/user/signin", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SigninResponse> signin(@RequestHeader("authorization") final String authentication) throws AuthenticationFailedException {
+    public ResponseEntity<SigninResponse> signin(@RequestHeader("authorization") final String authentication)
+            throws AuthenticationFailedException {
         byte[] decode = Base64.getDecoder().decode(authentication.split("Basic ")[1]);
         String decodedText = new String(decode);
         String[] decodedArray = decodedText.split(":");
@@ -89,9 +92,9 @@ public class UserController {
     }
 
     /**
-     * Method accepts the access_token and logout the user, if token is valid
+     * Method accepts the access_token as http POST method and logout the user, if token is valid
      * @param authorizationToken
-     * @return ResponseEntity with logged-out user uuid, success message and httpstatus
+     * @return SignoutResponse JSON and HttpStatus.OK
      * @throws SignOutRestrictedException
      */
     @RequestMapping(method = RequestMethod.POST, path="/user/signout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

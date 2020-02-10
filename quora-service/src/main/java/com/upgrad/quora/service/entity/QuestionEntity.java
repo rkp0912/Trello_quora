@@ -8,6 +8,9 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+/**
+ * Creates question table in the database.
+ */
 @Entity
 @Table(name = "question", schema = "public")
 @NamedQueries(

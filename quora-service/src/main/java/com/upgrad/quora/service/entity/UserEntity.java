@@ -7,7 +7,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-
+/**
+ * Creates users table in the database
+ */
 @Entity
 @Table(name ="users", schema="public")
 @NamedQueries(

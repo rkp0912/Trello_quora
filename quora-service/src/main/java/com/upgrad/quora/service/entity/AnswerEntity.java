@@ -8,6 +8,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 
+/**
+ * Creates answer table in the database.
+ */
 @Entity
 @Table(name = "answer", schema = "public")
 @NamedQueries(
